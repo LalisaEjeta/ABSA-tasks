@@ -1,0 +1,14 @@
+BERT-E2E-ABSA/
+
+Aspect-Polarity/absa_model/
+ABSA-E2E/absa_model/
+ABSA-E2E/aspect_model/
+ABSA-E2E/absa_bilstm_model/
+
+convert_to_conll_format.py
+ABSA-E2E/absa-e2e.py
+ABSA-E2E/new_absa_model/
+
+
+
+
