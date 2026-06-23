@@ -1,27 +1,32 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Imports
+# # <a id='toc1_'></a>[Imports](#toc0_)
 
-# In[1]:
+# In[ ]:
 
 
 import torch
-from transformers import AutoModelForSequenceClassification
-from transformers import AutoTokenizer
-from transformers import TrainingArguments
 import evaluate
-from transformers import Trainer
 import numpy as np
 import pandas as pd
 import xml.etree.ElementTree as ET
 from sklearn.metrics import classification_report
 
+from datasets import Dataset
+from transformers import (
+    AutoTokenizer,
+    AutoModelForTokenClassification,
+    TrainingArguments,
+    Trainer,
+    DataCollatorForTokenClassification,
+    AutoModelForSequenceClassification
+)
+from seqeval.metrics import classification_report
 
-# In[2]:
 
+# In[ ]:
 
-import torch
 
 print("CUDA available:", torch.cuda.is_available())
 
@@ -105,73 +110,72 @@ csv_df.head()
 csv_df.shape
 
 
-# # Merge the datasets
+# # <a id='toc2_'></a>[Merge the datasets](#toc0_)
 
-# In[30]:
+# In[10]:
 
 
 final_df = pd.concat([csv_df, myXML], ignore_index=True)
 
 
-# In[31]:
+# In[11]:
 
 
 final_df.head()
 
 
-# In[32]:
+# In[12]:
 
 
 final_df["sentence"].iloc[1]
 
 
-# In[33]:
+# In[13]:
 
 
 final_df["sentence"].iloc[1]
 
 
-# In[34]:
+# In[14]:
 
 
 final_df.shape
 
 
-# In[35]:
+# In[15]:
 
 
 print(final_df["polarity"].unique())
 
 
-# # Preprocess
+# # <a id='toc3_'></a>[Preprocess](#toc0_)
 
-# In[36]:
+# In[16]:
 
 
 final_df["polarity"] = final_df["polarity"].str.strip()
 final_df["aspect"] = final_df["aspect"].str.replace('"', '')
 
 
-# # Take 1000 of dataset
+# # <a id='toc4_'></a>[Take 1000 of dataset](#toc0_)
 
-# In[37]:
+# In[17]:
 
 
 final_df = final_df.head(6000)
 
 
-# In[38]:
+# In[18]:
 
 
 final_df.shape
 
 
-# # BIO tagging 
+# # <a id='toc5_'></a>[BIO tagging](#toc0_)
 
-# In[39]:
+# In[ ]:
 
 
-import pandas as pd
 import string
 
 # ---------------------------
@@ -245,34 +249,10 @@ def convert(df):
     return dataset
 
 
-# In[40]:
-
-
-# bio_data = convert(final_df)
-
-
-# In[41]:
-
-
-# bio_data[1]
-
-
 # # Model training 
 
-# In[42]:
+# In[ ]:
 
-
-import torch
-import numpy as np
-from datasets import Dataset
-from transformers import (
-    AutoTokenizer,
-    AutoModelForTokenClassification,
-    TrainingArguments,
-    Trainer,
-    DataCollatorForTokenClassification
-)
-from seqeval.metrics import classification_report
 
 # =========================================================
 # 1. LABELS (BIOES + SENTIMENT)
@@ -432,7 +412,7 @@ trainer = Trainer(
 trainer.train()
 
 
-# In[43]:
+# In[23]:
 
 
 tokenizer.save_pretrained("./new_absa_model")
@@ -441,12 +421,10 @@ model.save_pretrained("./new_absa_model")
 
 # # Inference
 
-# In[44]:
+# In[ ]:
 
 
-import torch
-import numpy as np
-from transformers import AutoTokenizer, AutoModelForTokenClassification
+from transformers import AutoTokenizer
 
 # =========================================================
 # 1. LOAD MODEL + TOKENIZER (NOW CORRECT)
@@ -573,21 +551,9 @@ if __name__ == "__main__":
     print(analyze(sentence))
 
 
-# In[25]:
-
-
-final_df.head()
-
-
-# In[ ]:
-
-
-final
-
-
 # # Convert file to .py
 
-# In[205]:
+# In[45]:
 
 
 from nbconvert import ScriptExporter
