@@ -88,7 +88,3 @@ Full pipeline that performs:
 - Aspect extraction
 - Opinion detection
 - Sentiment classification
-
----
-
-## Typical Pipeline
